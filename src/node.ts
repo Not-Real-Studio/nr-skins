@@ -55,6 +55,12 @@ export interface SkinSaveResult {
   warnings?: string[]
 }
 
+export interface SkinCheckResult extends SkinSaveResult {
+  /** Собранный CSS (с базой) — только при `ok`. */
+  css?: string
+  vars?: SkinVars
+}
+
 export interface SkinSelection {
   name: string
   mode: 'light' | 'dark'
@@ -184,8 +190,8 @@ export interface FsSkins {
   select(sel: SkinSelection): Promise<void>
   /** Полный разбор одного скина: исходник, переменные, ошибки — для редактора и агента. */
   get(name: string, opts?: SkinsListOpts): Promise<SkinDetail>
-  /** Проверить текст без записи (агентский `skin_check`, finalize). */
-  check(name: string, css: string, opts?: SkinsListOpts): Promise<SkinSaveResult>
+  /** Проверить текст без записи (агентский `skin_check`, превью редактора): при успехе — собранный CSS и переменные. */
+  check(name: string, css: string, opts?: SkinSaveOpts): Promise<SkinCheckResult>
   current(): SkinSelection | null
 }
 
@@ -219,7 +225,7 @@ export function createFsSkins(opts: FsSkinsOptions): FsSkins {
   }
   const setFor = async (o?: SkinsListOpts): Promise<SkinSet> => skinSet(sharedDir, workspaceSkinsDir(await cwdFor(o)))
 
-  const check = async (name: string, css: string, o?: SkinSaveOpts): Promise<SkinSaveResult & { text?: string }> => {
+  const check = async (name: string, css: string, o?: SkinSaveOpts): Promise<SkinCheckResult & { text?: string }> => {
     if (!SKIN_NAME_RE.test(name)) return { ok: false, errors: [`имя "${name}" — латиница в нижнем регистре, цифры, дефис; с буквы; до 40`] }
     const set = await setFor(o)
     // Шапка из опций сильнее своей (редактор «сохранить как» меняет имя и базу).
@@ -237,7 +243,12 @@ export function createFsSkins(opts: FsSkinsOptions): FsSkins {
     const c = compileSkin(name, (n) => files.get(n)?.text, known)
     const errors = c.errors.map(formatIssue)
     const warnings = c.warnings.map(formatIssue)
-    return { ok: errors.length === 0, ...(errors.length ? { errors } : {}), ...(warnings.length ? { warnings } : {}), text }
+    return {
+      ok: errors.length === 0,
+      ...(errors.length ? { errors } : { css: c.css, vars: c.vars }),
+      ...(warnings.length ? { warnings } : {}),
+      text,
+    }
   }
 
   return {
