@@ -58,7 +58,7 @@ describe('createFsSkins', () => {
     await skins.select({ name: 'warm', mode: 'dark' })
     expect(skins.current()).toEqual({ name: 'warm', mode: 'dark' })
     const text = skinContext(root, ws)
-    expect(text).toMatch(/скин `warm`, режим тёмный, base: base/)
+    expect(text).toMatch(/Скин `warm` \(тёмный, base: base\)/)
     expect(text).toMatch(/accent #fa4/)
     expect(text).toMatch(/font-body 'Lora'/)
     expect(text).toMatch(/broken \(сломан\)/)

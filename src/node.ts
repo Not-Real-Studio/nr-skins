@@ -327,16 +327,9 @@ export function skinContext(root: string, cwd?: string): string {
   const names = set.list().map((s) => `${s.name}${s.source === 'workspace' ? '*' : ''}${s.error ? ' (сломан)' : ''}`)
   const lines = [
     '## Тема интерфейса nrchat',
-    `Сейчас: скин \`${cur.name}\`, режим ${cur.mode === 'dark' ? 'тёмный' : 'светлый'}${info?.base ? `, base: ${info.base}` : ''}${info ? '' : ' (встроенный)'}.`,
+    `Скин \`${cur.name}\` (${cur.mode === 'dark' ? 'тёмный' : 'светлый'}${info?.base ? `, base: ${info.base}` : ''})${info && !info.error ? `: ${summarizeVars(set.compile(cur.name).vars, cur.mode)}` : ''}. Скины: ${names.join(', ') || '—'}.`,
+    'Только если просят про тему: новый скин — skin_save(name, css, base) (только --nr-* в [data-skin="<имя>"][data-mode=…], «на основе X» — base: X), проверка — skin_check; редактор тем вкладкой — artifact_init(template: "jsx+skins"). Файлы скинов не читай.',
   ]
-  if (info && !info.error) lines.push(`Значения: ${summarizeVars(set.compile(cur.name).vars, cur.mode)}.`)
-  lines.push(
-    `Скины: ${names.join(', ') || '—'} (* — рабочей области). Файлы скинов не читай, чтобы узнать, что есть и какие значения: список и выжимка — здесь, детали — skin_check(<имя>).`,
-    'Редактор тем вкладкой — artifact_init(template: "jsx+skins"): готовый редактор на __host.skins ($uses: skins), его и правь.',
-    'Новый или правленый скин — файл `.nr/skins/<имя>.skin.css` в рабочем каталоге: шапка `/* @skin name/description/mode: light|dark|both/base */`, ' +
-      'тело — только `--nr-*` в `[data-skin="<имя>"]` / `[data-skin="<имя>"][data-mode="light|dark"]` и элементы ленты по контракту (`.nr-message[data-role=user|assistant]`, `.nr-author`, `.nr-avatar`, `.nr-text em`, `.nr-thinking`, `.nr-tool`, `.nr-composer`). ' +
-      '«На основе X» — `base: X` и только отличия. После записи — `skin_check(<имя>)`; править чужой скин — сохранить под новым именем. Контракт — skin-spec (профиль артефактов, раздел «редактор тем»).',
-  )
   return lines.join('\n')
 }
 
