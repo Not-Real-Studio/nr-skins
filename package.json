@@ -1,0 +1,45 @@
+{
+  "name": "@notrealstudio/nr-skins",
+  "version": "0.1.0",
+  "description": "Скины nrchat как данные (skin-spec): контракт токенов и селекторов, разбор шапки .skin.css, валидатор (css-tree), наследование base, файловый источник SkinsOps для serveBackend",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./node": {
+      "types": "./dist/node.d.ts",
+      "import": "./dist/node.js",
+      "default": "./dist/node.js"
+    }
+  },
+  "scripts": {
+    "prebuild": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "tsc",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "node -e \"const p=require('./package.json');const bad=Object.entries({...p.dependencies,...p.peerDependencies}).filter(([,v])=>String(v).startsWith('file:'));if(bad.length){console.error('publish blocked: file: deps '+bad.map(([k])=>k).join(', '));process.exit(1)}\""
+  },
+  "dependencies": {
+    "css-tree": "^3.1.0"
+  },
+  "devDependencies": {
+    "@types/css-tree": "^2.3.10",
+    "@types/node": "^24.19.0",
+    "typescript": "^5.3.0",
+    "vitest": "^2.0.0"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "registry": "https://git.notreal.studio/api/packages/denis/npm/"
+  }
+}
