@@ -331,7 +331,8 @@ export function skinContext(root: string, cwd?: string): string {
   ]
   if (info && !info.error) lines.push(`Значения: ${summarizeVars(set.compile(cur.name).vars, cur.mode)}.`)
   lines.push(
-    `Скины: ${names.join(', ') || '—'} (* — рабочей области).`,
+    `Скины: ${names.join(', ') || '—'} (* — рабочей области). Файлы скинов не читай, чтобы узнать, что есть и какие значения: список и выжимка — здесь, детали — skin_check(<имя>).`,
+    'Редактор тем вкладкой — artifact_init(template: "jsx+skins"): готовый редактор на __host.skins ($uses: skins), его и правь.',
     'Новый или правленый скин — файл `.nr/skins/<имя>.skin.css` в рабочем каталоге: шапка `/* @skin name/description/mode: light|dark|both/base */`, ' +
       'тело — только `--nr-*` в `[data-skin="<имя>"]` / `[data-skin="<имя>"][data-mode="light|dark"]` и элементы ленты по контракту (`.nr-message[data-role=user|assistant]`, `.nr-author`, `.nr-avatar`, `.nr-text em`, `.nr-thinking`, `.nr-tool`, `.nr-composer`). ' +
       '«На основе X» — `base: X` и только отличия. После записи — `skin_check(<имя>)`; править чужой скин — сохранить под новым именем. Контракт — skin-spec (профиль артефактов, раздел «редактор тем»).',
