@@ -30,6 +30,7 @@ import {
   URL_TOKENS,
   type SkinMode,
 } from './contract.js'
+import { checkContrast, checkTextSize } from './readability.js'
 
 export interface SkinHeader {
   name?: string
@@ -282,6 +283,9 @@ function checkDeclaration(d: csstree.Declaration, element: boolean, line: number
       warnings.push({ line, message: `неизвестный токен ${prop}`, hint: 'опечатка? Ядро его не читает (список — skin-spec §3)' })
     }
     if (value === '') errors.push({ line, message: `${prop}: пустое значение` })
+    // Читаемость (DEV-254): кегль ступеней текста — не мельче минимума.
+    const small = checkTextSize(prop, value)
+    if (small) errors.push({ line, ...small })
     return true
   }
   if (!element) {
@@ -513,6 +517,9 @@ export function compileSkin(name: string, lookup: SkinLookup, known?: ReadonlySe
           hint: `задай их в [data-skin="${name}"][data-mode="${mode}"], укажи base: <скин> или mode: ${mode === 'dark' ? 'light' : 'dark'} в шапке`,
         })
       }
+      // Контраст текста и статусов (DEV-254) — предупреждение: скин рисуется,
+      // редактор тем и агент видят, что поправить; строго — тест скинов.
+      for (const c of checkContrast(have, mode)) warnings.push({ message: c.message, ...(c.hint ? { hint: c.hint } : {}) })
     }
   }
   return { name, header, css: errors.length ? '' : css, vars, chain, errors, warnings }

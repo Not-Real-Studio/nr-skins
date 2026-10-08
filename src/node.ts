@@ -328,7 +328,7 @@ export function skinContext(root: string, cwd?: string): string {
   const lines = [
     '## Тема интерфейса nrchat',
     `Скин \`${cur.name}\` (${cur.mode === 'dark' ? 'тёмный' : 'светлый'}${info?.base ? `, base: ${info.base}` : ''})${info && !info.error ? `: ${summarizeVars(set.compile(cur.name).vars, cur.mode)}` : ''}. Скины: ${names.join(', ') || '—'}.`,
-    'Только если просят про тему: новый скин — skin_save(name, css, base) (только --nr-* в [data-skin="<имя>"][data-mode=…], «на основе X» — base: X), проверка — skin_check; редактор тем вкладкой — artifact_init(template: "jsx+skins"). Файлы скинов не читай.',
+    'Только если просят про тему: новый скин — skin_save(name, css, base) (только --nr-* в [data-skin="<имя>"][data-mode=…], «на основе X» — base: X), проверка — skin_check; редактор тем вкладкой — artifact_init(template: "jsx+skins"). Файлы скинов не читай. Читаемость: кегль ≥13px (sm/body ≥15px), моно — только код/пути/id, контраст текста и статусов к фону ≥4.5:1.',
   ]
   return lines.join('\n')
 }
