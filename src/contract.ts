@@ -163,8 +163,18 @@ export const ELEMENT_SELECTORS: readonly SelectorSpec[] = [
   { selector: '.nr-text', description: 'текстовая часть реплики (markdown)' },
   { selector: '.nr-thinking', description: 'блок рассуждений модели (thinking)' },
   { selector: '.nr-tool', description: 'карточка вызова тула' },
-  { selector: '.nr-composer', description: 'поле ввода реплики' },
+  { selector: '.nr-composer', description: 'поле ввода реплики (высоту держит фронт: минимум COMPOSER_MIN_ROWS строк, рост до COMPOSER_MAX_SHARE высоты чата)' },
 ]
+
+/**
+ * Высота композера — гарантия фронта, не скина (DEV-256): поле не ниже
+ * `COMPOSER_MIN_ROWS` строк своего кегля и интерлиньяжа и растёт по тексту до
+ * `COMPOSER_MAX_SHARE` высоты чата, дальше — скролл внутри. Скин размеров не
+ * задаёт (их нет в `ELEMENT_PROPERTIES`); `font-size`/`line-height`/`padding`
+ * у `.nr-composer` меняют строку, но не число строк. Зеркало — `nrchat/src/chat/composerFit.ts`.
+ */
+export const COMPOSER_MIN_ROWS = 3
+export const COMPOSER_MAX_SHARE = 0.4
 
 /** Теги, допустимые только внутри `.nr-text` — разметка реплики. */
 export const TEXT_TAGS: readonly string[] = ['p', 'em', 'strong', 'a', 'blockquote', 'code', 'li', 'h1', 'h2', 'h3', 'hr']
