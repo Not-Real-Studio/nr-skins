@@ -39,7 +39,11 @@
     "LICENSE"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Not-Real-Studio/nr-skins.git"
+  },
   "publishConfig": {
-    "registry": "https://git.notreal.studio/api/packages/denis/npm/"
+    "registry": "https://registry.npmjs.org/"
   }
 }
